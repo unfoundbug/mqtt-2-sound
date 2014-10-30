@@ -3,6 +3,7 @@ import mosquitto
 import yaml
 import pygame
 import os
+import random
 
 config_f = open('config.yaml')
 config = yaml.safe_load(config_f)
@@ -13,12 +14,30 @@ pygame.mixer.init(44100, -16, 1, 2048)
 
 currently_playing_file = ""
 
+def getAnnounceFile(username):
+	print("Searching for announce file")
+	config_FileName = "audio/" + username + "_announce.cfg"
+	if(os.path.exists(config_FileName)):
+		print("Config file found")
+		config_File = open(config_FileName)
+		line = config_File.readline()
+		print("Line count = " + line + "")
+		skipCount = random.randint(0, int(line) - 1)
+		print("Playing sample " + line)
+		while(skipCount):
+			line = config_File.readline()
+			skipCount = skipCount - 1
+		config_File.close()
+		print("Playing " + line + "")
+		return "audio/" + line
+	else :
+		return "audio/%s_announce.ogg"
 
-def on_message(obj, msg):
+def on_message(obj, usrData, msg):
     print "Received %s on topic %s" % (msg.payload, msg.topic)
     if msg.topic == 'door/inner/opened/username':
         # Set volume to 50% for this clip
-        play("audio/%s_announce.ogg" % msg.payload, 0.5)
+        play(getAnnounceFile(msg.payload), 0.5)
     elif msg.topic == 'door/outer/buzzer':
         play("audio/buzzer.ogg")
     elif msg.topic == 'door/outer/opened/username':

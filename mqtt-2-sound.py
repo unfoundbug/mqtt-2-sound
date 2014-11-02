@@ -20,13 +20,16 @@ def getAnnounceFile(username):
 		print("Config file found")
 		config_File = open(config_FileName)
 		line = config_File.readline()
+		selectedFile = "audio/buzzer.ogg"
 		skipCount = random.randint(0, int(line) - 1)
 		while(skipCount):
 			line = config_File.readline()
+			if(len(line) > 0):
+				selectedFile = line
 			skipCount = skipCount - 1
 		config_File.close()
-		print("Playing " + line)
-		return "audio/" + line
+		print("Playing " + selectedFile)
+		return "audio/" + selectedFile
 	else :
 		return "audio/%s_announce.ogg"
 

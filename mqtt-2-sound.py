@@ -15,20 +15,17 @@ pygame.mixer.init(44100, -16, 1, 2048)
 currently_playing_file = ""
 
 def getAnnounceFile(username):
-	print("Searching for announce file")
 	config_FileName = "audio/" + username + "_announce.cfg"
 	if(os.path.exists(config_FileName)):
 		print("Config file found")
 		config_File = open(config_FileName)
 		line = config_File.readline()
-		print("Line count = " + line + "")
 		skipCount = random.randint(0, int(line) - 1)
-		print("Playing sample " + line)
 		while(skipCount):
 			line = config_File.readline()
 			skipCount = skipCount - 1
 		config_File.close()
-		print("Playing " + line + "")
+		print("Playing " + line)
 		return "audio/" + line
 	else :
 		return "audio/%s_announce.ogg"
